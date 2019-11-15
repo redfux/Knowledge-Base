@@ -20,21 +20,21 @@ a more detailed description (and maybe error correction) will follow.
 
 >2) ACL to filter I-Net traffic
  
-    ip access-list extended PMM-INET    
-     deny   ip 10.173.52.0 0.0.0.255 10.0.0.0 0.255.255.255 log    
-     deny   ip 10.173.52.0 0.0.0.255 172.16.0.0 0.15.255.255 log    
-     deny   ip 10.173.52.0 0.0.0.255 192.168.0.0 0.0.255.255 log    
-     permit ip 10.173.52.0 0.0.0.255 any log    
+    ip access-list extended PBR-INET    
+     deny   ip 10.10.52.0 0.0.0.255 10.0.0.0 0.255.255.255 log    
+     deny   ip 10.10.52.0 0.0.0.255 172.16.0.0 0.15.255.255 log    
+     deny   ip 10.10.52.0 0.0.0.255 192.168.0.0 0.0.255.255 log    
+     permit ip 10.10.52.0 0.0.0.255 any log    
     exit    
 
 
 >3) Creat route-map named "PMM":    
->match at ACL "PMM-INET"   
+>match at ACL "PBR-INET"   
 >set Hotspot-GW as next hop
 
-    route-map PMM permit 10    
+    route-map PBR permit 10    
      match ip address PMM-INET    
-     set ip next-hop 10.173.52.5    
+     set ip next-hop 10.10.52.5    
     exit    
 
 
@@ -42,9 +42,9 @@ a more detailed description (and maybe error correction) will follow.
 >4) Bind route-map "PMM" to interface
 
     interface Vlan52    
-     description PMM-TEST-VLAN    
-     ip address 10.173.52.1 255.255.255.0    
-     ip helper-address 10.173.204.5    
+     description PBR-TEST-VLAN    
+     ip address 10.10.52.1 255.255.255.0    
+     ip helper-address 10.10.10.5    
      ip policy route-map PMM    
     exit
 
